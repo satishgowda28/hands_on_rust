@@ -10,7 +10,7 @@ pub fn map_idx(x:i32, y:i32) -> usize {
 	((y * SCREEN_WIDTH) + x) as usize
 }
 pub struct Map {
-  tiles:Vec<TileType>
+  pub tiles:Vec<TileType>
 }
 impl Map {
 	pub fn new() -> Self {
