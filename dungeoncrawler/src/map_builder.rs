@@ -27,8 +27,20 @@ impl MapBuilder {
       }
       if !overlap {
         room.for_each(|p| {
-
-        }) 
+          if p.x > 0 && p.x < SCREEN_WIDTH && p.y > 0 && p.y < SCREEN_HEIGHT {
+            let idx = map_idx(p.x, p.y);
+            self.map.tiles[idx] = TileType::FLOOR;
+          }
+        });
+        self.room.push(room);
+      }
+    }
+  }
+  fn apply_vertical_tunnel(&mut self, y1:i32, y2:i32, x:i32) {
+    use std::cmp::{min,max};
+    for y in min(y1, y2) ..= max(y1, y2) {
+      if let Some(idx) = self.map.try_idx(Point::new(x, y)) {
+        self.map.tiles[idx as usize] = TileType::FLOOR;
       }
     }
   }
