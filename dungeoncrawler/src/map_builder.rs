@@ -44,4 +44,29 @@ impl MapBuilder {
       }
     }
   }
+  fn apply_horizonatal_tunnel(&mut self, x1:i32, x2:i32, y:i32) {
+    use std::cmp::{min, max};
+    for x in min(x1,x2)..=max(x1,x2) {
+      if let Some(idx) = self.map.try_idx(Point::new(x, y)) {
+        self.map.tiles[idx as usize] = TileType::FLOOR;
+      }
+    }
+  }
+  fn build_corridor(&mut self, rng: &mut RandomNumberGenerator) {
+    let mut rooms = self.room.clone();
+    rooms.sort_by(|a,b| a.center().x.cmp(&b.center().x));
+
+    for(i, room) in rooms.iter().enumerate().skip(1) {
+      let prev = rooms[i-1].center();
+      let new = room.center();
+
+      if rng.range(0, 2) == 1 {
+        self.apply_horizonatal_tunnel(prev.x, new.x, prev.y);
+        self.apply_vertical_tunnel(prev.y, new.y, new.x);
+      }else {
+        self.apply_horizonatal_tunnel(prev.x, new.x, new.y);
+        self.apply_vertical_tunnel(prev.y, new.y, prev.x);
+      }
+    }
+  }
 }
