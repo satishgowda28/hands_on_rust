@@ -18,16 +18,29 @@ impl Map {
 			tiles: vec![TileType::FLOOR; NUM_TILES],
 		}		
 	}
-	pub fn render(&self, ctx: &mut BTerm) {
-		for y in 0..SCREEN_HEIGHT {
-			for x in 0..SCREEN_WIDTH {
-				let idx = map_idx(x, y);
-				match self.tiles[idx] {
-					TileType::FLOOR => {
-						ctx.set(x,y,YELLOW, BLACK, to_cp437('.'))
-					}
-					TileType::WALL => {
-						ctx.set(x,y,GREEN, BLACK, to_cp437('#'))
+	pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
+		ctx.set_active_console(0);
+		for y in camera.top_y..camera.bottom_y {
+			for x in camera.left_x..camera.right_x {
+				if self.is_bounds(Point::new(x, y)) {
+					let idx = map_idx(x, y);
+					match self.tiles[idx] {
+						TileType::FLOOR => {
+							ctx.set(
+								x - camera.left_x,
+								y - camera.top_y,
+								YELLOW,
+								BLACK, 
+								to_cp437('.'))
+						}
+						TileType::WALL => {
+							ctx.set(
+								x - camera.left_x,
+								y - camera.top_y,
+								GREEN,
+								BLACK, 
+								to_cp437('#'))
+						}
 					}
 				}
 			}

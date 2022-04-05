@@ -1,6 +1,7 @@
 mod map;
 mod player;
 mod map_builder;
+mod camera;
 mod prelude {
     pub use bracket_lib::prelude::*;
     pub const SCREEN_WIDTH:i32 = 80;
@@ -10,12 +11,14 @@ mod prelude {
     pub use crate::map::*;
 		pub use crate::player::*;
 		pub use crate::map_builder::*;
+		pub use crate::camera::*;
 }
 use prelude::*;
 
 struct State {
   map:Map,
-	player: Player
+	player: Player,
+	camera:Camera
 }
 impl State {
 	fn new() -> Self {
@@ -23,7 +26,8 @@ impl State {
 		let map_builder = MapBuilder::new(&mut rng);
 		Self {
 			map: map_builder.map,
-			player: Player::new(map_builder.player_start)
+			player: Player::new(map_builder.player_start),
+			camera: Camera::new(map_builder.player_start)
 		}
 	}
 	//Point::new(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
@@ -31,9 +35,9 @@ impl State {
 impl GameState for State {
 	fn tick(&mut self, ctx: &mut BTerm) {
 		ctx.cls();
-		self.player.update(ctx, &self.map);
-		self.map.render(ctx);
-		self.player.render(ctx);
+		self.player.update(ctx, &self.map, &mut self.camera);
+		self.map.render(ctx, &self.camera);
+		self.player.render(ctx, &self.camera);
 	}
 }
 fn main() -> BError {
