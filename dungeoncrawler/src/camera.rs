@@ -13,13 +13,13 @@ impl Camera {
       left_x: palyer_position.x - DISPLAY_WIDTH/2,
       right_x: palyer_position.x + DISPLAY_WIDTH/2,
       top_y: palyer_position.y - DISPLAY_HEIGHT/2,
-      bottom_y: palyer_position.y - DISPLAY_HEIGHT/2,
+      bottom_y: palyer_position.y + DISPLAY_HEIGHT/2,
     }
   }
   pub fn on_player_move(&mut self, palyer_position:Point) {
     self.left_x = palyer_position.x - DISPLAY_WIDTH/2 ;
     self.right_x = palyer_position.x + DISPLAY_WIDTH/2 ;
     self.top_y = palyer_position.y - DISPLAY_HEIGHT/2 ;
-    self.bottom_y = palyer_position.y - DISPLAY_HEIGHT/2 ;
+    self.bottom_y = palyer_position.y + DISPLAY_HEIGHT/2 ;
   }
 }
